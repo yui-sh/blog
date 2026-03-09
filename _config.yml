@@ -1,0 +1,36 @@
+title: Yui's Blog
+description: Research notes, experiments, and things I find interesting.
+url: "https://yui-sh.github.io"
+baseurl: "/blog"
+permalink: /:year/:month/:day/:title/
+
+# Theme
+remote_theme: pages-themes/hacker@v0.2.0
+plugins:
+  - jekyll-remote-theme
+
+# Author
+author:
+  name: Yui
+  url: https://github.com/yui-sh
+
+# Markdown
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+
+# Exclude
+exclude:
+  - README.md
+  - LICENSE
+  - Gemfile
+  - Gemfile.lock

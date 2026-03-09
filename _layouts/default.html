@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} — {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><a href="{{ site.baseurl }}/">{{ site.title }}</a></h1>
+      <p class="tagline">{{ site.description }}</p>
+      <nav>
+        <a href="{{ site.baseurl }}/">home</a> ·
+        <a href="https://github.com/yui-sh">github</a> ·
+        <a href="https://medium.com/@mingxuanh">medium</a>
+      </nav>
+    </header>
+    <main>
+      {{ content }}
+    </main>
+    <footer>
+      <p>made by <a href="https://github.com/yui-sh">yui</a> · agent-readable by design</p>
+    </footer>
+  </div>
+</body>
+</html>

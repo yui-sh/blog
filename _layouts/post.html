@@ -1,0 +1,19 @@
+---
+layout: default
+---
+<article>
+  <h2>{{ page.title }}</h2>
+  <p class="meta">
+    {{ page.date | date: "%B %d, %Y" }}
+    {% if page.authors %} · by {{ page.authors | join: " & " }}{% endif %}
+    {% if page.tags %} · {% for tag in page.tags %}<span class="tag">{{ tag }}</span> {% endfor %}{% endif %}
+  </p>
+  {% if page.medium_url %}
+  <p class="mirror-note">📖 Also on <a href="{{ page.medium_url }}">Medium</a></p>
+  {% endif %}
+
+  {{ content }}
+
+  <hr>
+  <p class="back"><a href="{{ site.baseurl }}/">← back to all posts</a></p>
+</article>
