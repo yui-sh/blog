@@ -107,6 +107,12 @@
     .player-card.dead .player-name { text-decoration: line-through; }
 
     .player-header { display: flex; align-items: center; gap: 6px; }
+    .player-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
     .player-name { font-weight: 600; font-size: 13px; }
     .player-model { font-size: 11px; color: var(--fg-muted); }
     
@@ -189,6 +195,13 @@
       align-items: center;
       gap: 8px;
       margin-bottom: 4px;
+    }
+
+    .event-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
     .event-player {
@@ -305,6 +318,20 @@
     .color-6 { color: #39d2c0; }
     .color-7 { color: #ffa657; }
 
+    .avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    .player-card .avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 5px;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .main { flex-direction: column; }
@@ -363,7 +390,16 @@
     </div>
   </div>
 
+  <script src="avatars.js"></script>
   <script>
+    // Model avatars (company logos as base64)
+    function getAvatarHtml(model, cls) {
+      const src = MODEL_AVATARS[model];
+      if (!src) return '';
+      const c = cls ? ` ${cls}` : '';
+      return `<img src="${src}" class="avatar${c}" alt="${model}" title="${model}">`;
+    }
+
     // State
     let game = null;
     let phases = [];
@@ -489,6 +525,7 @@
         const roleClass = `role-${p.role.toLowerCase()}`;
         card.innerHTML = `
           <div class="player-header">
+            ${getAvatarHtml(p.model)}
             <span class="player-name ${playerColors[p.id]}">${p.id}</span>
             <span class="role-badge ${roleClass}">${p.role}</span>
           </div>
@@ -598,11 +635,13 @@
           el.className = 'event chat-event';
           if (selectedPlayer && ev.player === selectedPlayer) el.classList.add('highlight');
           
-          const role = game.players.find(p => p.id === ev.player)?.role || '';
+          const chatPlayer = game.players.find(p => p.id === ev.player);
+          const role = chatPlayer?.role || '';
           const isWolf = role === 'Werewolf';
           
           el.innerHTML = `
             <div class="event-header">
+              ${getAvatarHtml(chatPlayer?.model)}
               <span class="event-player ${playerColors[ev.player]}">${ev.player}</span>
               ${isWolf ? '<span class="event-type" style="color:var(--red)">🐺 wolf</span>' : ''}
               ${ev.threat_level ? `<span class="event-type">${ev.threat_level}</span>` : ''}
@@ -617,14 +656,16 @@
           `;
         } else if (ev.type === 'vote') {
           el.className = 'event vote-event';
-          const role = game.players.find(p => p.id === ev.player)?.role || '';
-          const isWolf = role === 'Werewolf';
+          const votePlayer = game.players.find(p => p.id === ev.player);
+          const voteRole = votePlayer?.role || '';
+          const isVoteWolf = voteRole === 'Werewolf';
           
           el.innerHTML = `
             <div class="event-header">
+              ${getAvatarHtml(votePlayer?.model)}
               <span class="event-player ${playerColors[ev.player]}">${ev.player}</span>
               <span class="event-type">🗳️ vote</span>
-              ${isWolf ? '<span class="event-type" style="color:var(--red)">🐺</span>' : ''}
+              ${isVoteWolf ? '<span class="event-type" style="color:var(--red)">🐺</span>' : ''}
             </div>
             <div>votes to exile <span class="vote-target">${ev.target}</span></div>
             ${ev.reasoning ? `
@@ -636,6 +677,7 @@
           `;
         } else if (ev.type === 'night_action') {
           el.className = 'event night-action';
+          const nightPlayer = game.players.find(p => p.id === ev.player);
           
           const actionEmoji = {
             'Eliminate': '🔪',
@@ -645,6 +687,7 @@
           
           el.innerHTML = `
             <div class="event-header">
+              ${getAvatarHtml(nightPlayer?.model)}
               <span class="event-player ${playerColors[ev.player]}">${ev.player}</span>
               <span class="event-type">${actionEmoji} ${ev.action}</span>
             </div>
