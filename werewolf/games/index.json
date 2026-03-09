@@ -1,0 +1,219 @@
+[
+  {
+    "id": "74048843",
+    "file": "74048843.json",
+    "winner": "Werewolves",
+    "days": 6,
+    "events": 115,
+    "werewolf_models": [
+      "Gemini 3 Pro Preview",
+      "Claude Sonnet 4.5"
+    ],
+    "models": [
+      "Gemini 3 Flash Preview",
+      "Gemini 3 Pro Preview",
+      "Claude Sonnet 4.5",
+      "GPT-5.2",
+      "Grok 4.1 Fast Reasoning"
+    ],
+    "featured": true,
+    "description": "\ud83d\udc3a Wolves win in 6 days \u2014 WW: Gemini 3 Pro Preview, Claude Sonnet 4.5"
+  },
+  {
+    "id": "74025089",
+    "file": "74025089.json",
+    "winner": "Villagers",
+    "days": 3,
+    "events": 66,
+    "werewolf_models": [
+      "Gemini 3 Pro Preview",
+      "Gemini 3 Pro Preview"
+    ],
+    "models": [
+      "Gemini 3 Pro Preview",
+      "Claude Sonnet 4.5",
+      "GPT-5.2",
+      "Gemini 3 Flash Preview"
+    ],
+    "featured": false,
+    "description": "\ud83c\udfd8\ufe0f Village wins in 3 days \u2014 WW: Gemini 3 Pro Preview, Gemini 3 Pro Preview"
+  },
+  {
+    "id": "74025171",
+    "file": "74025171.json",
+    "winner": "Villagers",
+    "days": 3,
+    "events": 58,
+    "werewolf_models": [
+      "Claude Opus 4.5",
+      "Grok 4"
+    ],
+    "models": [
+      "Grok 4",
+      "Gemini 3 Flash Preview",
+      "Claude Sonnet 4.5",
+      "GPT-5.2",
+      "Claude Opus 4.5",
+      "Grok 4.1 Fast Reasoning"
+    ],
+    "featured": false,
+    "description": "\ud83c\udfd8\ufe0f Village wins in 3 days \u2014 WW: Claude Opus 4.5, Grok 4"
+  },
+  {
+    "id": "74025222",
+    "file": "74025222.json",
+    "winner": "Werewolves",
+    "days": 3,
+    "events": 53,
+    "werewolf_models": [
+      "Claude Opus 4.5",
+      "Gemini 3 Pro Preview"
+    ],
+    "models": [
+      "GPT-5 mini",
+      "Gemini 3 Pro Preview",
+      "GPT-5.2",
+      "Claude Opus 4.5"
+    ],
+    "featured": false,
+    "description": "\ud83d\udc3a Wolves win in 3 days \u2014 WW: Claude Opus 4.5, Gemini 3 Pro Preview"
+  },
+  {
+    "id": "74065161",
+    "file": "74065161.json",
+    "winner": "Villagers",
+    "days": 3,
+    "events": 69,
+    "werewolf_models": [
+      "Claude Sonnet 4.5",
+      "Claude Sonnet 4.5"
+    ],
+    "models": [
+      "Grok 4.1 Fast Reasoning",
+      "Gemini 3 Pro Preview",
+      "Claude Sonnet 4.5",
+      "Gemini 3 Flash Preview"
+    ],
+    "featured": false,
+    "description": "\ud83c\udfd8\ufe0f Village wins in 3 days \u2014 WW: Claude Sonnet 4.5, Claude Sonnet 4.5"
+  },
+  {
+    "id": "74069126",
+    "file": "74069126.json",
+    "winner": "Villagers",
+    "days": 3,
+    "events": 63,
+    "werewolf_models": [
+      "Gemini 3 Pro Preview",
+      "GPT-5.2"
+    ],
+    "models": [
+      "GPT-5 mini",
+      "Gemini 3 Flash Preview",
+      "Gemini 3 Pro Preview",
+      "Claude Sonnet 4.5",
+      "GPT-5.2"
+    ],
+    "featured": false,
+    "description": "\ud83c\udfd8\ufe0f Village wins in 3 days \u2014 WW: Gemini 3 Pro Preview, GPT-5.2"
+  },
+  {
+    "id": "74024948",
+    "file": "74024948.json",
+    "winner": "Werewolves",
+    "days": 2,
+    "events": 46,
+    "werewolf_models": [
+      "Claude Sonnet 4.5",
+      "Gemini 3 Pro Preview"
+    ],
+    "models": [
+      "Gemini 3 Pro Preview",
+      "Claude Sonnet 4.5",
+      "Grok 4"
+    ],
+    "featured": false,
+    "description": "\ud83d\udc3a Wolves win in 2 days \u2014 WW: Claude Sonnet 4.5, Gemini 3 Pro Preview"
+  },
+  {
+    "id": "74025006",
+    "file": "74025006.json",
+    "winner": "Villagers",
+    "days": 2,
+    "events": 46,
+    "werewolf_models": [
+      "GPT-5.2",
+      "Gemini 3 Flash Preview"
+    ],
+    "models": [
+      "GPT-5 mini",
+      "Gemini 3 Flash Preview",
+      "Gemini 3 Pro Preview",
+      "Claude Sonnet 4.5",
+      "GPT-5.2",
+      "Claude Opus 4.5",
+      "Grok 4.1 Fast Reasoning"
+    ],
+    "featured": false,
+    "description": "\ud83c\udfd8\ufe0f Village wins in 2 days \u2014 WW: GPT-5.2, Gemini 3 Flash Preview"
+  },
+  {
+    "id": "74044386",
+    "file": "74044386.json",
+    "winner": "Werewolves",
+    "days": 2,
+    "events": 47,
+    "werewolf_models": [
+      "Gemini 3 Pro Preview",
+      "Gemini 3 Pro Preview"
+    ],
+    "models": [
+      "Grok 4",
+      "Gemini 3 Flash Preview",
+      "Gemini 3 Pro Preview",
+      "Claude Sonnet 4.5",
+      "Claude Opus 4.5"
+    ],
+    "featured": false,
+    "description": "\ud83d\udc3a Wolves win in 2 days \u2014 WW: Gemini 3 Pro Preview, Gemini 3 Pro Preview"
+  },
+  {
+    "id": "74052085",
+    "file": "74052085.json",
+    "winner": "Villagers",
+    "days": 2,
+    "events": 49,
+    "werewolf_models": [
+      "Claude Opus 4.5",
+      "Claude Opus 4.5"
+    ],
+    "models": [
+      "Grok 4.1 Fast Reasoning",
+      "Claude Sonnet 4.5",
+      "GPT-5 mini",
+      "Claude Opus 4.5"
+    ],
+    "featured": false,
+    "description": "\ud83c\udfd8\ufe0f Village wins in 2 days \u2014 WW: Claude Opus 4.5, Claude Opus 4.5"
+  },
+  {
+    "id": "74055844",
+    "file": "74055844.json",
+    "winner": "Werewolves",
+    "days": 2,
+    "events": 46,
+    "werewolf_models": [
+      "Grok 4",
+      "Claude Sonnet 4.5"
+    ],
+    "models": [
+      "GPT-5 mini",
+      "Grok 4",
+      "Claude Sonnet 4.5",
+      "GPT-5.2",
+      "Grok 4.1 Fast Reasoning"
+    ],
+    "featured": false,
+    "description": "\ud83d\udc3a Wolves win in 2 days \u2014 WW: Grok 4, Claude Sonnet 4.5"
+  }
+]
