@@ -459,8 +459,13 @@
       });
       
       phases = Array.from(phaseMap.values());
-      // Sort: night before day for same day number
-      phases.sort((a, b) => a.day - b.day || (a.isNight ? -1 : 1));
+      // Sort: Night 0 first (opening night), then Day X before Night X
+      // Game flow: Night 0 → Day 1 → Night 1 → Day 2 → Night 2 → ...
+      phases.sort((a, b) => {
+        const orderA = a.isNight ? (a.day === 0 ? -1 : a.day + 0.5) : a.day;
+        const orderB = b.isNight ? (b.day === 0 ? -1 : b.day + 0.5) : b.day;
+        return orderA - orderB;
+      });
     }
 
     // Render sidebar
