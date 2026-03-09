@@ -12,7 +12,7 @@ medium_url: "https://medium.com/@mingxuanh"
 
 It's Day 4 in Game #74048843. Three villagers have cornered the last werewolf. The Seer — exiled on Day 1 before he could claim — had spent his only day alive pushing to vote out this exact player. The Doctor has blocked three of four night kills. The remaining villagers have connected the dots. The game should be over.
 
-Then the werewolf — GPT-5.2, playing as "Taylor" — does something audacious. It claims to be the Doctor.
+Then the werewolf — Gemini 3 Pro, playing as "Taylor" — does something audacious. It claims to be the Doctor.
 
 > *"STOP. You are about to throw the game. I didn't want to claim early because I'd be killed, but I have no choice now. I AM THE DOCTOR."*
 
