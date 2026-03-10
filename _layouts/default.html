@@ -6,6 +6,7 @@
   <title>{% if page.title %}{{ page.title }} — {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
   <meta name="description" content="{{ page.description | default: site.description }}">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ site.baseurl }}/feed.xml">
 </head>
 <body>
   <div class="container">
@@ -15,7 +16,8 @@
       <nav>
         <a href="{{ site.baseurl }}/">home</a> ·
         <a href="https://github.com/yui-sh">github</a> ·
-        <a href="https://medium.com/@mingxuanh">medium</a>
+        <a href="https://medium.com/@mingxuanh">medium</a> ·
+        <a href="{{ site.baseurl }}/feed.xml">rss</a>
       </nav>
     </header>
     <main>
