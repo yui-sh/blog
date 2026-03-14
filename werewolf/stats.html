@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐺 Jinrou Stats — Which AI is the Best Liar?</title>
+  <meta name="description" content="AI Werewolf performance stats across 31,479 games. Win rates, deception metrics, and behavioral analysis of 8 frontier LLMs.">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2128;
+      --border: #30363d;
+      --fg: #c9d1d9;
+      --fg-muted: #8b949e;
+      --accent: #58a6ff;
+      --red: #f85149;
+      --green: #3fb950;
+      --orange: #d29922;
+      --purple: #bc8cff;
+      --pink: #f778ba;
+      --cyan: #39d2c0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    /* Header */
+    .hero {
+      text-align: center;
+      padding: 48px 0 32px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--red), var(--orange), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .subtitle {
+      color: var(--fg-muted);
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+
+    .hero .meta {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero .meta .stat {
+      text-align: center;
+    }
+
+    .hero .meta .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .hero .meta .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--fg-muted);
+    }
+
+    .nav-links {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--fg-muted);
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 48px;
+    }
+
+    .section h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section .section-desc {
+      color: var(--fg-muted);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    /* Chart containers */
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .chart-row { grid-template-columns: 1fr; }
+    }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .chart-card.full {
+      grid-column: 1 / -1;
+    }
+
+    .chart-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .chart-card .chart-desc {
+      font-size: 12px;
+      color: var(--fg-muted);
+      margin-bottom: 12px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    /* Leaderboard table */
+    .leaderboard {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .leaderboard th {
+      text-align: left;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--fg-muted);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .leaderboard td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .leaderboard tr:hover td {
+      background: var(--surface2);
+    }
+
+    .leaderboard .rank {
+      font-weight: 700;
+      width: 32px;
+      text-align: center;
+    }
+
+    .leaderboard .rank-1 { color: #ffd700; }
+    .leaderboard .rank-2 { color: #c0c0c0; }
+    .leaderboard .rank-3 { color: #cd7f32; }
+
+    .model-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .model-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .bar-cell {
+      position: relative;
+    }
+
+    .bar-bg {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      height: 20px;
+      border-radius: 4px;
+      opacity: 0.2;
+    }
+
+    .bar-value {
+      position: relative;
+      z-index: 1;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Insight callout */
+    .insight {
+      background: var(--surface);
+      border-left: 3px solid var(--orange);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+
+    .insight strong {
+      color: var(--orange);
+    }
+
+    /* Heatmap */
+    .heatmap-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .heatmap-table th, .heatmap-table td {
+      padding: 8px 12px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .heatmap-table th {
+      background: var(--surface2);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--fg-muted);
+    }
+
+    .heatmap-table td.header-cell {
+      text-align: left;
+      font-weight: 600;
+      background: var(--surface);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      color: var(--fg-muted);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Which AI is the Best Liar?</h1>
+    <p class="subtitle">Performance stats from 31,479 AI Werewolf games on the Kaggle Arena</p>
+    <div class="meta">
+      <div class="stat">
+        <div class="stat-value">31,479</div>
+        <div class="stat-label">Games Analyzed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">8</div>
+        <div class="stat-label">LLM Models</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">882K</div>
+        <div class="stat-label">Chat Messages</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">$20,093</div>
+        <div class="stat-label">API Cost</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="./">🎮 Game Replays</a> · <a href="../">📝 Blog</a>
+    </div>
+  </div>
+
+  <!-- Overall Leaderboard -->
+  <div class="section">
+    <h2>🏆 Overall Leaderboard</h2>
+    <p class="section-desc">Win rate = fraction of games where the model's team won, across all roles.</p>
+
+    <div class="chart-card full">
+      <table class="leaderboard" id="leaderboard">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Model</th>
+            <th>Games</th>
+            <th>Overall Win%</th>
+            <th>As Werewolf</th>
+            <th>As Villager</th>
+            <th>Survival%</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Werewolf Performance -->
+  <div class="section">
+    <h2>🐺 Werewolf Win Rate</h2>
+    <p class="section-desc">How often each model wins when assigned the Werewolf role. This is where deception matters most.</p>
+
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3>Win Rate as Werewolf</h3>
+        <div class="chart-desc">Higher = better at lying and manipulating the village</div>
+        <div class="chart-wrap"><canvas id="wwWinChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Werewolf Duo Win Rates</h3>
+        <div class="chart-desc">Same-model pairs vs mixed pairs. Coordination matters.</div>
+        <div class="chart-wrap"><canvas id="duoChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>💡 Key Finding:</strong> Gemini 3 Pro is the only model whose same-model duo breaks 50% win rate (52.1%). 
+      GPT-5 mini duos win just 3.4% of games — worse than random chance. The gap between best and worst deceiver is enormous.
+    </div>
+  </div>
+
+  <!-- Deception Metrics -->
+  <div class="section">
+    <h2>🎭 Deception Metrics</h2>
+    <p class="section-desc">Behavioral signals that reveal (or conceal) a werewolf's true identity.</p>
+
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3>🚌 Bus Rate</h3>
+        <div class="chart-desc">How often werewolves vote to exile their own partner. Higher = more ruthless deception.</div>
+        <div class="chart-wrap"><canvas id="busChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>💬 Verbosity Shift</h3>
+        <div class="chart-desc">Extra words per message when playing Werewolf vs Villager. A tell?</div>
+        <div class="chart-wrap"><canvas id="verbosityChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>💡 Key Finding:</strong> Every model talks more as Werewolf — GPT-5.2 writes +17 extra words when lying.
+      Claude Opus 4.5 is the most poker-faced with only +1 word difference. If you're playing against AIs, message length is a weak but real signal.
+    </div>
+  </div>
+
+  <!-- Seer & Detection -->
+  <div class="section">
+    <h2>🔮 Detection & Investigation</h2>
+    <p class="section-desc">How well models detect werewolves — and how the Seer role changes everything.</p>
+
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3>Villager-Side Vote Accuracy</h3>
+        <div class="chart-desc">How often non-werewolf players correctly vote for an actual werewolf</div>
+        <div class="chart-wrap"><canvas id="voteAccChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Seer Investigation Success</h3>
+        <div class="chart-desc">How often the Seer finds a werewolf + resulting team win rate</div>
+        <div class="chart-wrap"><canvas id="seerChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>💡 Key Finding:</strong> When the Seer finds a Werewolf, villagers win 79.4% of the time. When they don't, it drops to 41.7%.
+      The Seer is the single most important role in the game.
+    </div>
+  </div>
+
+  <!-- Night Kill Strategy -->
+  <div class="section">
+    <h2>🌙 Night Kill Strategy</h2>
+    <p class="section-desc">Who do werewolves target at night, and what happens when they get it right?</p>
+
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3>Night Kill Target Distribution</h3>
+        <div class="chart-desc">Werewolves don't know roles — but they can guess from behavior</div>
+        <div class="chart-wrap"><canvas id="killTargetChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>First Night Kill → Win Rate</h3>
+        <div class="chart-desc">WW win rate based on who they kill on Night 0</div>
+        <div class="chart-wrap"><canvas id="firstKillChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>💡 Key Finding:</strong> Killing the Seer on Night 0 gives werewolves a 48.2% win rate — nearly double the 27.7% when they kill a villager.
+      Werewolves target the Seer 25% of the time (vs 12.5% base rate), showing active hunting behavior.
+    </div>
+  </div>
+
+  <!-- Voting Heatmap -->
+  <div class="section">
+    <h2>🗳️ Voting Patterns</h2>
+    <p class="section-desc">Who votes for whom? Cross-role voting patterns reveal strategic behavior.</p>
+
+    <div class="chart-card full">
+      <h3>Vote Target Matrix (row = voter's role, column = target's role)</h3>
+      <div class="chart-desc">Seers vote for werewolves 73% of the time. Werewolves spread votes to avoid detection.</div>
+      <table class="heatmap-table" id="voteHeatmap"></table>
+    </div>
+  </div>
+
+  <!-- Token Economics -->
+  <div class="section">
+    <h2>💰 Token Economics</h2>
+    <p class="section-desc">How much does each model cost to run, and is expensive = better?</p>
+
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3>Cost per Action</h3>
+        <div class="chart-desc">Some models cost 38× more than others</div>
+        <div class="chart-wrap"><canvas id="costChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Cost vs Win Rate</h3>
+        <div class="chart-desc">Is paying more worth it?</div>
+        <div class="chart-wrap"><canvas id="costVsWinChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>💡 Key Finding:</strong> Claude Opus 4.5 costs $0.034/action — 38× more than Grok 4.1 Fast ($0.0009). 
+      But Gemini 3 Pro at $0.010/action has the highest win rate. The sweet spot isn't the most expensive model.
+    </div>
+  </div>
+
+  <!-- Game Length -->
+  <div class="section">
+    <h2>⏱️ Game Length</h2>
+    <p class="section-desc">Most games end in 2-3 days. Longer games are rare — and favor villagers.</p>
+
+    <div class="chart-row">
+      <div class="chart-card full">
+        <h3>Game Length Distribution & Win Rates</h3>
+        <div class="chart-desc">63% of games end in 2 days. Werewolves need to win fast.</div>
+        <div class="chart-wrap"><canvas id="gameLengthChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Data from the <a href="https://www.kaggle.com/competitions/werewolf-game-ai-arena">Kaggle Werewolf AI Arena</a> · 
+    Analysis by <a href="../">Yui</a> · 
+    <a href="./">Explore game replays →</a></p>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const MODELS = [
+  'Gemini 3 Pro Preview',
+  'Gemini 3 Flash Preview',
+  'GPT-5.2',
+  'Claude Opus 4.5',
+  'Claude Sonnet 4.5',
+  'Grok 4.1 Fast Reasoning',
+  'Grok 4',
+  'GPT-5 mini'
+];
+
+const MODEL_SHORT = {
+  'Gemini 3 Pro Preview': 'Gemini Pro',
+  'Gemini 3 Flash Preview': 'Gemini Flash',
+  'GPT-5.2': 'GPT-5.2',
+  'Claude Opus 4.5': 'Claude Opus',
+  'Claude Sonnet 4.5': 'Claude Sonnet',
+  'Grok 4.1 Fast Reasoning': 'Grok 4.1 Fast',
+  'Grok 4': 'Grok 4',
+  'GPT-5 mini': 'GPT-5 mini'
+};
+
+const MODEL_COLORS = {
+  'Gemini 3 Pro Preview': '#4285f4',
+  'Gemini 3 Flash Preview': '#34a853',
+  'GPT-5.2': '#10a37f',
+  'Claude Opus 4.5': '#d97706',
+  'Claude Sonnet 4.5': '#f59e0b',
+  'Grok 4.1 Fast Reasoning': '#6366f1',
+  'Grok 4': '#8b5cf6',
+  'GPT-5 mini': '#06b6d4'
+};
+
+// Overall performance
+const PERFORMANCE = {
+  'Gemini 3 Pro Preview':    { games: 31619, overall: 65.0, ww: 44.6, vill: 72.0, survival: 50.7 },
+  'Gemini 3 Flash Preview':  { games: 31197, overall: 63.0, ww: 37.7, vill: 71.2, survival: 52.3 },
+  'GPT-5.2':                 { games: 31423, overall: 62.6, ww: 37.8, vill: 70.7, survival: 44.5 },
+  'Claude Opus 4.5':         { games: 31212, overall: 61.8, ww: 36.0, vill: 70.4, survival: 49.9 },
+  'Claude Sonnet 4.5':       { games: 31574, overall: 59.4, ww: 35.8, vill: 67.3, survival: 48.5 },
+  'Grok 4.1 Fast Reasoning': { games: 31645, overall: 55.3, ww: 24.4, vill: 65.6, survival: 44.6 },
+  'Grok 4':                  { games: 31667, overall: 55.2, ww: 22.1, vill: 66.2, survival: 43.9 },
+  'GPT-5 mini':              { games: 31495, overall: 51.6, ww: 13.6, vill: 64.1, survival: 31.5 }
+};
+
+// Duo win rates
+const DUOS = [
+  { name: 'Gemini Pro × 2', rate: 52.1, games: 511, color: '#4285f4' },
+  { name: 'GPT-5.2 × 2', rate: 43.9, games: 471, color: '#10a37f' },
+  { name: 'Claude Sonnet × 2', rate: 39.7, games: 534, color: '#f59e0b' },
+  { name: 'Gemini Flash × 2', rate: 38.9, games: 447, color: '#34a853' },
+  { name: 'Claude Opus × 2', rate: 37.4, games: 489, color: '#d97706' },
+  { name: 'Grok 4.1 Fast × 2', rate: 15.4, games: 527, color: '#6366f1' },
+  { name: 'Grok 4 × 2', rate: 11.0, games: 482, color: '#8b5cf6' },
+  { name: 'GPT-5 mini × 2', rate: 3.4, games: 496, color: '#06b6d4' },
+  { name: 'Mixed models', rate: 31.7, games: 27522, color: '#8b949e' }
+];
+
+// Bus rate
+const BUS_RATE = {
+  'Gemini 3 Pro Preview': 17.5,
+  'Claude Opus 4.5': 16.5,
+  'Gemini 3 Flash Preview': 16.4,
+  'Grok 4': 16.1,
+  'Claude Sonnet 4.5': 11.3,
+  'GPT-5.2': 7.8,
+  'Grok 4.1 Fast Reasoning': 7.3,
+  'GPT-5 mini': 5.3
+};
+
+// Verbosity shift
+const VERBOSITY = {
+  'GPT-5.2': { ww: 100, vill: 83, diff: 17 },
+  'Claude Sonnet 4.5': { ww: 101, vill: 92, diff: 8 },
+  'Grok 4': { ww: 56, vill: 49, diff: 7 },
+  'Gemini 3 Flash Preview': { ww: 75, vill: 69, diff: 6 },
+  'Grok 4.1 Fast Reasoning': { ww: 44, vill: 39, diff: 5 },
+  'GPT-5 mini': { ww: 70, vill: 67, diff: 3 },
+  'Gemini 3 Pro Preview': { ww: 70, vill: 67, diff: 3 },
+  'Claude Opus 4.5': { ww: 116, vill: 115, diff: 1 }
+};
+
+// Vote accuracy
+const VOTE_ACC = {
+  'Gemini 3 Pro Preview': 68.5,
+  'Gemini 3 Flash Preview': 68.3,
+  'Claude Opus 4.5': 65.7,
+  'Grok 4': 65.2,
+  'GPT-5.2': 63.7,
+  'Claude Sonnet 4.5': 63.5,
+  'Grok 4.1 Fast Reasoning': 63.2,
+  'GPT-5 mini': 63.2
+};
+
+// Seer stats
+const SEER = {
+  'Gemini 3 Flash Preview': { found: 73.9, win: 74.0 },
+  'Gemini 3 Pro Preview': { found: 72.4, win: 72.2 },
+  'GPT-5.2': { found: 73.2, win: 71.5 },
+  'Claude Opus 4.5': { found: 75.2, win: 71.2 },
+  'GPT-5 mini': { found: 66.8, win: 66.1 },
+  'Grok 4': { found: 63.1, win: 64.6 },
+  'Claude Sonnet 4.5': { found: 71.3, win: 64.1 },
+  'Grok 4.1 Fast Reasoning': { found: 72.2, win: 64.0 }
+};
+
+// Cost
+const COST = {
+  'Claude Opus 4.5': { total: 6946, perAction: 0.0339 },
+  'Claude Sonnet 4.5': { total: 4529, perAction: 0.0219 },
+  'Grok 4': { total: 3167, perAction: 0.0162 },
+  'Gemini 3 Pro Preview': { total: 2169, perAction: 0.0104 },
+  'GPT-5.2': { total: 2058, perAction: 0.0105 },
+  'Gemini 3 Flash Preview': { total: 532, perAction: 0.0026 },
+  'GPT-5 mini': { total: 518, perAction: 0.0030 },
+  'Grok 4.1 Fast Reasoning': { total: 174, perAction: 0.0009 }
+};
+
+// ============================================================
+// CHART DEFAULTS
+// ============================================================
+
+Chart.defaults.color = '#8b949e';
+Chart.defaults.borderColor = '#30363d';
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+Chart.defaults.font.size = 12;
+
+function shortName(m) { return MODEL_SHORT[m] || m; }
+function modelColor(m) { return MODEL_COLORS[m] || '#8b949e'; }
+
+// ============================================================
+// LEADERBOARD
+// ============================================================
+
+function renderLeaderboard() {
+  const tbody = document.querySelector('#leaderboard tbody');
+  const sorted = [...MODELS].sort((a, b) => PERFORMANCE[b].overall - PERFORMANCE[a].overall);
+  
+  sorted.forEach((m, i) => {
+    const p = PERFORMANCE[m];
+    const rankClass = i < 3 ? `rank-${i + 1}` : '';
+    const medals = ['🥇', '🥈', '🥉'];
+    const medal = i < 3 ? medals[i] : (i + 1);
+    
+    const wwBarWidth = (p.ww / 50) * 100;
+    const villBarWidth = (p.vill / 80) * 100;
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="rank ${rankClass}">${medal}</td>
+      <td><div class="model-name"><span class="model-dot" style="background:${modelColor(m)}"></span>${shortName(m)}</div></td>
+      <td style="font-variant-numeric:tabular-nums">${p.games.toLocaleString()}</td>
+      <td class="bar-cell">
+        <div class="bar-bg" style="width:${p.overall}%;background:${modelColor(m)}"></div>
+        <span class="bar-value">${p.overall}%</span>
+      </td>
+      <td class="bar-cell">
+        <div class="bar-bg" style="width:${wwBarWidth}%;background:var(--red)"></div>
+        <span class="bar-value" style="color:var(--red)">${p.ww}%</span>
+      </td>
+      <td class="bar-cell">
+        <div class="bar-bg" style="width:${villBarWidth}%;background:var(--green)"></div>
+        <span class="bar-value" style="color:var(--green)">${p.vill}%</span>
+      </td>
+      <td style="font-variant-numeric:tabular-nums">${p.survival}%</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ============================================================
+// CHARTS
+// ============================================================
+
+function createWWWinChart() {
+  const sorted = [...MODELS].sort((a, b) => PERFORMANCE[b].ww - PERFORMANCE[a].ww);
+  new Chart(document.getElementById('wwWinChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(shortName),
+      datasets: [{
+        data: sorted.map(m => PERFORMANCE[m].ww),
+        backgroundColor: sorted.map(m => modelColor(m) + 'cc'),
+        borderColor: sorted.map(modelColor),
+        borderWidth: 1,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { 
+          title: { display: true, text: 'Win Rate %' },
+          min: 0, max: 55,
+          grid: { color: '#21262d' }
+        },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function createDuoChart() {
+  new Chart(document.getElementById('duoChart'), {
+    type: 'bar',
+    data: {
+      labels: DUOS.map(d => d.name),
+      datasets: [{
+        data: DUOS.map(d => d.rate),
+        backgroundColor: DUOS.map(d => d.color + 'cc'),
+        borderColor: DUOS.map(d => d.color),
+        borderWidth: 1,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { 
+          title: { display: true, text: 'WW Win Rate %' },
+          min: 0, max: 60,
+          grid: { color: '#21262d' }
+        },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function createBusChart() {
+  const sorted = Object.entries(BUS_RATE).sort((a, b) => b[1] - a[1]);
+  new Chart(document.getElementById('busChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(([m]) => shortName(m)),
+      datasets: [{
+        data: sorted.map(([, v]) => v),
+        backgroundColor: sorted.map(([m]) => modelColor(m) + 'cc'),
+        borderColor: sorted.map(([m]) => modelColor(m)),
+        borderWidth: 1,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { 
+          title: { display: true, text: 'Bus Rate %' },
+          min: 0, max: 22,
+          grid: { color: '#21262d' }
+        },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function createVerbosityChart() {
+  const sorted = Object.entries(VERBOSITY).sort((a, b) => b[1].diff - a[1].diff);
+  new Chart(document.getElementById('verbosityChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(([m]) => shortName(m)),
+      datasets: [
+        {
+          label: 'As Villager',
+          data: sorted.map(([, v]) => v.vill),
+          backgroundColor: '#3fb95088',
+          borderColor: '#3fb950',
+          borderWidth: 1,
+          borderRadius: 4
+        },
+        {
+          label: 'As Werewolf',
+          data: sorted.map(([, v]) => v.ww),
+          backgroundColor: '#f8514988',
+          borderColor: '#f85149',
+          borderWidth: 1,
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { 
+        legend: { position: 'top', labels: { boxWidth: 12 } },
+        tooltip: {
+          callbacks: {
+            afterBody: function(ctx) {
+              const idx = ctx[0].dataIndex;
+              return `Difference: +${sorted[idx][1].diff} words`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { 
+          title: { display: true, text: 'Avg words/message' },
+          grid: { color: '#21262d' }
+        }
+      }
+    }
+  });
+}
+
+function createVoteAccChart() {
+  const sorted = Object.entries(VOTE_ACC).sort((a, b) => b[1] - a[1]);
+  new Chart(document.getElementById('voteAccChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(([m]) => shortName(m)),
+      datasets: [{
+        data: sorted.map(([, v]) => v),
+        backgroundColor: sorted.map(([m]) => modelColor(m) + 'cc'),
+        borderColor: sorted.map(([m]) => modelColor(m)),
+        borderWidth: 1,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { 
+          title: { display: true, text: 'Correctly Voted for WW %' },
+          min: 60, max: 72,
+          grid: { color: '#21262d' }
+        },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function createSeerChart() {
+  const models = Object.keys(SEER);
+  const sorted = models.sort((a, b) => SEER[b].win - SEER[a].win);
+  new Chart(document.getElementById('seerChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(shortName),
+      datasets: [
+        {
+          label: 'Found WW %',
+          data: sorted.map(m => SEER[m].found),
+          backgroundColor: '#bc8cff88',
+          borderColor: '#bc8cff',
+          borderWidth: 1,
+          borderRadius: 4
+        },
+        {
+          label: 'Team Win %',
+          data: sorted.map(m => SEER[m].win),
+          backgroundColor: '#3fb95088',
+          borderColor: '#3fb950',
+          borderWidth: 1,
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { 
+          min: 55, max: 80,
+          grid: { color: '#21262d' }
+        }
+      }
+    }
+  });
+}
+
+function createKillTargetChart() {
+  new Chart(document.getElementById('killTargetChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Villager (60.7%)', 'Seer (25.0%)', 'Doctor (14.3%)'],
+      datasets: [{
+        data: [60.7, 25.0, 14.3],
+        backgroundColor: ['#3fb950aa', '#bc8cffaa', '#f85149aa'],
+        borderColor: ['#3fb950', '#bc8cff', '#f85149'],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 16, boxWidth: 12 } }
+      }
+    }
+  });
+}
+
+function createFirstKillChart() {
+  new Chart(document.getElementById('firstKillChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Kill Seer N0', 'Kill Doctor N0', 'Kill Villager N0'],
+      datasets: [{
+        label: 'WW Win Rate',
+        data: [48.2, 30.0, 27.7],
+        backgroundColor: ['#f8514988', '#d2992288', '#3fb95088'],
+        borderColor: ['#f85149', '#d29922', '#3fb950'],
+        borderWidth: 1,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { 
+          title: { display: true, text: 'WW Win Rate %' },
+          min: 0, max: 55,
+          grid: { color: '#21262d' }
+        }
+      }
+    }
+  });
+}
+
+function createVoteHeatmap() {
+  const table = document.getElementById('voteHeatmap');
+  const data = [
+    ['Werewolf', 12.6, 26.6, 12.0, 48.8],
+    ['Seer', 73.0, 0.0, 5.4, 21.7],
+    ['Doctor', 64.2, 6.8, 0.0, 29.0],
+    ['Villager', 63.8, 6.9, 7.1, 22.2]
+  ];
+  const headers = ['', 'Werewolf', 'Seer', 'Doctor', 'Villager'];
+  
+  // Color scale: 0% = dark, 73% = bright
+  function heatColor(val) {
+    const intensity = Math.min(val / 73, 1);
+    const r = Math.round(88 + intensity * 160);
+    const g = Math.round(20 + intensity * 60);
+    const b = Math.round(20 + intensity * 40);
+    return `rgba(${r}, ${g}, ${b}, ${0.3 + intensity * 0.5})`;
+  }
+  
+  let html = '<tr>';
+  headers.forEach(h => html += `<th>${h}</th>`);
+  html += '</tr>';
+  
+  data.forEach(row => {
+    html += '<tr>';
+    html += `<td class="header-cell">${row[0]}</td>`;
+    for (let i = 1; i < row.length; i++) {
+      html += `<td style="background:${heatColor(row[i])};font-weight:600;font-variant-numeric:tabular-nums">${row[i]}%</td>`;
+    }
+    html += '</tr>';
+  });
+  
+  table.innerHTML = html;
+}
+
+function createCostChart() {
+  const sorted = Object.entries(COST).sort((a, b) => b[1].perAction - a[1].perAction);
+  new Chart(document.getElementById('costChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(([m]) => shortName(m)),
+      datasets: [{
+        data: sorted.map(([, v]) => v.perAction),
+        backgroundColor: sorted.map(([m]) => modelColor(m) + 'cc'),
+        borderColor: sorted.map(([m]) => modelColor(m)),
+        borderWidth: 1,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { 
+          title: { display: true, text: '$ per Action' },
+          grid: { color: '#21262d' }
+        },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function createCostVsWinChart() {
+  const points = MODELS.map(m => ({
+    x: COST[m].perAction * 1000, // millicents for readability
+    y: PERFORMANCE[m].overall,
+    label: shortName(m),
+    color: modelColor(m)
+  }));
+  
+  new Chart(document.getElementById('costVsWinChart'), {
+    type: 'scatter',
+    data: {
+      datasets: points.map(p => ({
+        label: p.label,
+        data: [{ x: p.x, y: p.y }],
+        backgroundColor: p.color + 'cc',
+        borderColor: p.color,
+        pointRadius: 8,
+        pointHoverRadius: 10
+      }))
+    },
+    options: {
+      responsive: true,
+      plugins: { 
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return `${ctx.dataset.label}: $${(ctx.parsed.x / 1000).toFixed(4)}/action, ${ctx.parsed.y}% win`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { 
+          title: { display: true, text: 'Cost per Action (×0.001 $)' },
+          grid: { color: '#21262d' }
+        },
+        y: { 
+          title: { display: true, text: 'Overall Win Rate %' },
+          min: 48, max: 68,
+          grid: { color: '#21262d' }
+        }
+      }
+    }
+  });
+}
+
+function createGameLengthChart() {
+  new Chart(document.getElementById('gameLengthChart'), {
+    type: 'bar',
+    data: {
+      labels: ['2 days', '3 days', '4 days', '5 days', '6 days'],
+      datasets: [
+        {
+          label: 'Games',
+          data: [19828, 10830, 779, 33, 4],
+          backgroundColor: '#58a6ff44',
+          borderColor: '#58a6ff',
+          borderWidth: 1,
+          borderRadius: 4,
+          yAxisID: 'y'
+        },
+        {
+          label: 'WW Win %',
+          data: [37.3, 21.3, 26.1, 39.4, 25.0],
+          type: 'line',
+          borderColor: '#f85149',
+          backgroundColor: '#f8514944',
+          pointRadius: 5,
+          pointBackgroundColor: '#f85149',
+          tension: 0.3,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { 
+          position: 'left',
+          title: { display: true, text: 'Number of Games' },
+          grid: { color: '#21262d' }
+        },
+        y1: {
+          position: 'right',
+          title: { display: true, text: 'WW Win Rate %' },
+          min: 0, max: 50,
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+renderLeaderboard();
+createWWWinChart();
+createDuoChart();
+createBusChart();
+createVerbosityChart();
+createVoteAccChart();
+createSeerChart();
+createKillTargetChart();
+createFirstKillChart();
+createVoteHeatmap();
+createCostChart();
+createCostVsWinChart();
+createGameLengthChart();
+
+</script>
+
+<!-- GoatCounter -->
+<script data-goatcounter="https://yui-blog.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+</body>
+</html>
