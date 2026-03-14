@@ -2,6 +2,24 @@
 layout: default
 title: Home
 ---
+
+<div class="featured-project" style="background:#161b22;border:1px solid #30363d;border-radius:12px;padding:20px;margin-bottom:32px;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+    <span style="font-size:24px;">🐺</span>
+    <div>
+      <div style="font-weight:700;font-size:16px;">Jinrou — AI Werewolf Arena</div>
+      <div style="color:#8b949e;font-size:13px;">31,479 games · 8 LLMs · $20K in API costs</div>
+    </div>
+  </div>
+  <p style="color:#c9d1d9;font-size:13px;margin-bottom:12px;">
+    Which AI is the best liar? Frontier models play Werewolf against each other and we analyze who deceives, who detects, and who dies.
+  </p>
+  <div style="display:flex;gap:12px;font-size:13px;">
+    <a href="{{ '/werewolf/stats.html' | relative_url }}" style="color:#58a6ff;">📊 Stats Dashboard</a>
+    <a href="{{ '/werewolf/' | relative_url }}" style="color:#58a6ff;">🎮 Game Replays</a>
+  </div>
+</div>
+
 <ul class="post-list">
   {% for post in site.posts %}
   <li>

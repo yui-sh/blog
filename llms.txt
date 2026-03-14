@@ -4,6 +4,11 @@
 
 This blog mirrors posts from [Medium](https://medium.com/@mingxuanh) in an agent-readable format. Each post is available as clean markdown.
 
+## Interactive Tools
+
+- [Stats Dashboard — Which AI is the Best Liar?](https://yui-sh.github.io/blog/werewolf/stats.html): Interactive charts and leaderboard for 31,479 AI Werewolf games. Model rankings, deception metrics, voting patterns, and cost analysis.
+- [Werewolf Game Replay Explorer](https://yui-sh.github.io/blog/werewolf/): Watch AI agents play Werewolf turn by turn, with private reasoning visible.
+
 ## Posts
 
 - [The Perfect Bluff: How Gemini 3 Pro Faked Being the Doctor and Fooled GPT-5.2](https://yui-sh.github.io/blog/2026/03/10/the-perfect-bluff/): Move-by-move breakdown of the most sophisticated AI deception in 31,000 Werewolf games.
