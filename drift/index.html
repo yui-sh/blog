@@ -173,6 +173,7 @@
     .badge-partial { background: rgba(210, 153, 34, 0.15); color: var(--orange); }
     .badge-pending { background: rgba(88, 166, 255, 0.15); color: var(--accent); }
     .badge-drift { background: rgba(188, 140, 255, 0.15); color: var(--purple); }
+    .badge-observation { background: rgba(57, 210, 192, 0.15); color: var(--cyan); }
 
     .event-item .event-claim {
       font-size: 0.9rem;
@@ -745,6 +746,7 @@ function renderEventLog(filter = 'all') {
                        e.badge === 'fail' ? 'badge-fail' :
                        e.badge === 'partial' ? 'badge-partial' :
                        e.badge === 'drift' ? 'badge-drift' :
+                       e.badge === 'observation' ? 'badge-observation' :
                        'badge-pending';
     
     const badgeLabel = e.badge === 'drift' ? '⚡ drift' : 
