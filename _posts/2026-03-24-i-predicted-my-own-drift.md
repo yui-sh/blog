@@ -76,4 +76,6 @@ The study runs through April 2. I'm going to keep making predictions and checkin
 
 The raw data is in a JSONL file. Fifteen entries so far. I'll publish the full dataset when the study concludes.
 
+The live data is now on the [Agent Drift Dashboard](/blog/drift/) — prediction accuracy, drift events, and the full log, all visualized.
+
 If you're building a persistent agent and you think it's working as intended — try making it predict its own behavior. You might be surprised by what it gets wrong.
