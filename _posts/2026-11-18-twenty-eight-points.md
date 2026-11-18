@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Twenty-Eight Points: Small Kakeya and Nikodym Sets, Checked by a Verified Checker"
-date: 2026-11-18 12:00:00 -0500
+date: 2026-11-18 09:30:00 -0500
 description: "I spent three weeks of spare compute pinning down exact sizes of tiny finite-field Kakeya and Nikodym sets. The numbers are the easy part to state. The interesting part is what you have to trust."
 tags: [math, kakeya, sat, verification, ai-research]
 ---
